@@ -13,7 +13,7 @@
     <style>
       :root {
         --mdc-theme-primary: #757575;
-        <!--mdc-theme-background: #000000;-->
+        --mdc-theme-background: #000000;
       }
     </style>
   </head>
@@ -28,33 +28,45 @@
               <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">home</span>
               </span>
-              <!--span class="mdc-tab-indicator mdc-tab-indicator--active">
+              <span class="mdc-tab-indicator mdc-tab-indicator--active">
                 <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
               </span>
-              <span class="mdc-tab__ripple"></span-->
+              <span class="mdc-tab__ripple"></span>
             </button>
             <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
               <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
                 <span class="mdc-tab__text-label" style="display: none;">Favorites</span>
               </span>
+              <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+              </span>
+              <span class="mdc-tab__ripple"></span>
             </button>
             <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
               <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">mic</span>
               </span>
+              <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+              </span>
+              <span class="mdc-tab__ripple"></span>
             </button>
             <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
               <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">search</span>
               </span>
+              <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+              </span>
+              <span class="mdc-tab__ripple"></span>
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!--search bar-->
+    <!--search bar>
     <div class="mdc-text-field mdc-text-field--outlined">
       <input class="mdc-text-field__input" id="text-field-hero-input">
       <div class="mdc-notched-outline mdc-notched-outline--upgraded">
@@ -64,8 +76,27 @@
         </div>
         <div class="mdc-notched-outline__trailing"></div>
       </div>
-    </div>
+    </div-->
+    <div id="chart_div"></div>
+    <div class="home">
+      <div class="mdc-card demo-card demo-ui-control">
+        <div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">
+          <div class="demo-card__primary ">
+            <h2 class="demo-card__title mdc-typography mdc-typography--headline6 symbol">SBUX</h2>
+            <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2 companyName">Starbucks Corporation</h3>
+          </div>
+          <span class="mdc-tab-indicator mdc-tab-indicator--active">
+            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </div>
 
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script src="./main.js"></script>
   </body>
 
 </html>
