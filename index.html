@@ -14,7 +14,7 @@
       <style>
         :root {
           --mdc-theme-primary: #757575;
-          <!-- mdc-theme-background: #000000;-->
+          <!--mdc-theme-background: #000000;-->
         }
       </style>
   </head>
@@ -34,7 +34,7 @@
               </span>
               <span class="mdc-tab__ripple"></span>
             </button>
-            <button class="mdc-tab favTab" role="tab" aria-selected="false" tabindex="1">
+            <button class="mdc-tab favTab" role="tab" aria-selected="true" tabindex="1">
               <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
                 <span class="mdc-tab__text-label" style="display: none;">Favorites</span>
@@ -78,11 +78,12 @@
         <div class="mdc-notched-outline__trailing"></div>
       </div>
     </div-->
-    <div id="chart_div" style="width:800; height:400"></div>
+    <div class="stockInfo"></div>
+    <div id="chart_div" style="width:400; height:600"></div>
+    <div id="time"></div>
 
     <div class="home"></div>
 
-    <div class="stockCardInfo"></div>
 
     <div class="fav">
       <div class="mdc-card demo-card">

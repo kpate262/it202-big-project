@@ -47,6 +47,7 @@ var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], 
 
 var rowData = [];
 var symbol = "";
+var color = '';
 
 $(document).ready(function(){
   const keys = Object.keys(favoriteStocks);
@@ -74,6 +75,8 @@ $(document).ready(function(){
   $(".mic").hide();
   $(".search").hide();
   $("#chart_div").hide();
+  $(".stockInfo").hide();
+  $("#time").hide();
 
   $(".homeTab").on("click", function(){
     tabs.activateTab(0);
@@ -82,27 +85,43 @@ $(document).ready(function(){
     $(".mic").hide();
     $(".search").hide();
     $("#chart_div").hide();
+    $(".stockInfo").hide();
+    $("#time").hide();
   });
 
   $(".stockCard").on("click", function(){
     //remove old stockCardInfo--->>
     $("#chart_div").empty();
+    $(".stockInfo").empty();
     $(".mic").hide();
     $(".fav").hide();
     $(".home").hide();
     $(".search").hide();
     $("#chart_div").show();
+    $(".stockInfo").show();
+    $("#time").show();
+
     var stockSymbol = $(this).attr('id');
     console.log(":"+stockSymbol+":");
     symbol = stockSymbol;
     var intraDayUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
     console.log(intraDayUrl);
+    var compInfo = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ stockSymbol +"&apikey=RQ5M4GP7TOJYKTI4";
+
+
     //$.get(intraDayUrl, function(response){});
     $.get(intraDayUrl, function(response){
       var startTime = "09:35:00";
       var lastDate = response["Meta Data"]["3. Last Refreshed"].replace(/ /g," ");
       var date = lastDate.split(" ")[0];
       var startDate = date + " " + startTime;
+      $.get(compInfo, function(compname){
+        $(".stockInfo").append("<div> " +
+                                  "<h5 id='sym'>" + symbol + "</h5>" +
+                                  "<h2 id='comp'>" + compname["bestMatches"][0]["2. name"] + "</h2>" +
+                                  "<h2 id='quote'>$" + parseFloat(response["Time Series (5min)"][response["Meta Data"]["3. Last Refreshed"]]["4. close"]) + "</h2>" +
+                                "</div>");
+      })
       //console.log(startDate);
       //console.log(lastDate);
       var counter = 0;
@@ -127,9 +146,25 @@ $(document).ready(function(){
       //console.log(stockSymbol);
       google.charts.load('current', {packages: ['corechart', 'line']});
       google.charts.setOnLoadCallback(drawLogScales);
+      $("#time").append("<button class='mdc-button'>" +
+                          "<span class='mdc-button__ripple'></span>" +
+                        "1D</button>" +
+                        "<button class='mdc-button'>" +
+                          "<span class='mdc-button__ripple'></span>" +
+                        "1W</button>" +
+                        "<button class='mdc-button'>" +
+                          "<span class='mdc-button__ripple'></span>" +
+                        "1M</button>" +
+                        "<button class='mdc-button'>" +
+                          "<span class='mdc-button__ripple'></span>" +
+                        "3M</button>" +
+                        "<button class='mdc-button'>" +
+                          "<span class='mdc-button__ripple'></span>" +
+                        "1Y</button>" +
+                        "<button class='mdc-button'>" +
+                          "<span class='mdc-button__ripple'></span>" +
+                        "5Y</button>" );
     });
-
-
   });
 
   $(".favTab").on("click", function(){
@@ -139,6 +174,8 @@ $(document).ready(function(){
     $(".home").hide();
     $(".search").hide();
     $("#chart_div").hide();
+    $(".stockInfo").hide();
+    $("#time").hide();
   });
 
   $(".micTab").on("click", function(){
@@ -148,6 +185,8 @@ $(document).ready(function(){
     $(".mic").show();
     $(".search").hide();
     $("#chart_div").hide();
+    $(".stockInfo").hide();
+    $("#time").hide();
   });
 
   $(".searchTab").on("click", function(){
@@ -157,25 +196,31 @@ $(document).ready(function(){
     $(".fav").hide();
     $(".mic").hide();
     $(".search").show();
+    $(".stockInfo").hide();
+    $("#time").hide();
   });
 });
 
 
 function drawLogScales(){
   var data = new google.visualization.DataTable();
-      data.addColumn('string', 'X');
+      data.addColumn('string');
       data.addColumn('number', symbol);
 
       console.log(rowData);
       data.addRows(rowData);
 
       var options = {
-        hAxis: {
-          title: 'Time'
+        backgroundColor: '#000000',
 
+        hAxis: {
+          textPosition: 'none',
+          gridlines: {
+              color: 'transparent'
+          }
         },
-        width: 400,
-        chartArea: {  width: "94%", height: "70%" },
+        width: 375,
+        chartArea: {  width: "100%", height: "80%" },
         colors: ['#a52714']
       };
 
