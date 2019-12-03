@@ -45,11 +45,14 @@ var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], 
                       "TWTR":["Twitter Inc."], "GOOGL":["Alphabet Inc."], "AMZN":["Amazon.com Inc."]};
 
 
+var rowData = [];
+var symbol = "";
+
 $(document).ready(function(){
   const keys = Object.keys(favoriteStocks);
   for(const key of keys){
     console.log(key);
-    $(".home").append('<div class="mdc-card demo-card demo-ui-control">' +
+    $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
                         '<div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">' +
                           '<div class="demo-card__primary">'+
                             '<h2 class="demo-card__title mdc-typography mdc-typography--headline6 symbol">'+ key +'</h2>' +
@@ -67,29 +70,116 @@ $(document).ready(function(){
   window.mdc.autoInit();
   const tabs = document.querySelector('.mdc-tab-bar').MDCTabBar;
   $(".home").show();
+  $(".fav").hide();
+  $(".mic").hide();
   $(".search").hide();
+  $("#chart_div").hide();
 
   $(".homeTab").on("click", function(){
     tabs.activateTab(0);
     $(".home").show();
+    $(".fav").hide();
+    $(".mic").hide();
     $(".search").hide();
+    $("#chart_div").hide();
+  });
+
+  $(".stockCard").on("click", function(){
+    //remove old stockCardInfo--->>
+    $("#chart_div").empty();
+    $(".mic").hide();
+    $(".fav").hide();
+    $(".home").hide();
+    $(".search").hide();
+    $("#chart_div").show();
+    var stockSymbol = $(this).attr('id');
+    console.log(":"+stockSymbol+":");
+    symbol = stockSymbol;
+    var intraDayUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
+    console.log(intraDayUrl);
+    //$.get(intraDayUrl, function(response){});
+    $.get(intraDayUrl, function(response){
+      var startTime = "09:35:00";
+      var lastDate = response["Meta Data"]["3. Last Refreshed"].replace(/ /g," ");
+      var date = lastDate.split(" ")[0];
+      var startDate = date + " " + startTime;
+      //console.log(startDate);
+      //console.log(lastDate);
+      var counter = 0;
+      $.each(response["Time Series (5min)"], function(i, v){
+          var rowEl = [];
+          rowEl.push(i);
+          //console.log(">>" + v["1. open"])
+          rowEl.push(parseFloat(v["1. open"]));
+          //console.log("<<" + rowEl);
+          rowData.push(rowEl);
+
+        if(i == startDate){
+          return false;
+        }
+
+        //console.log(v["1. open"]);
+      });
+      //console.log(rowData);
+      rowData = rowData.reverse();
+      console.log(rowData);
+      //$.each()
+      //console.log(stockSymbol);
+      google.charts.load('current', {packages: ['corechart', 'line']});
+      google.charts.setOnLoadCallback(drawLogScales);
+    });
+
+
   });
 
   $(".favTab").on("click", function(){
     tabs.activateTab(1);
-    $(".home").show();
+    $(".mic").hide();
+    $(".fav").show();
+    $(".home").hide();
     $(".search").hide();
+    $("#chart_div").hide();
   });
 
   $(".micTab").on("click", function(){
     tabs.activateTab(2);
-    $(".home").show();
+    $(".home").hide();
+    $(".fav").hide();
+    $(".mic").show();
     $(".search").hide();
+    $("#chart_div").hide();
   });
 
   $(".searchTab").on("click", function(){
     tabs.activateTab(3);
+    $("#chart_div").hide();
     $(".home").hide();
+    $(".fav").hide();
+    $(".mic").hide();
     $(".search").show();
   });
 });
+
+
+function drawLogScales(){
+  var data = new google.visualization.DataTable();
+      data.addColumn('string', 'X');
+      data.addColumn('number', symbol);
+
+      console.log(rowData);
+      data.addRows(rowData);
+
+      var options = {
+        hAxis: {
+          title: 'Time'
+
+        },
+        width: 400,
+        chartArea: {  width: "94%", height: "70%" },
+        colors: ['#a52714']
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+      rowData = [];
+}

@@ -22,3 +22,20 @@ body {
 .favCard {
   background-color: #000000;
 }
+
+.demo-card__title{
+  margin: 0px;
+}
+
+.demo-card__subtitle {
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+.demo-card__secondary{
+  margin-bottom: 6px;
+}
+
+.chart_div{
+  margin-left:2px;
+}
