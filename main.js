@@ -1,3 +1,5 @@
+
+
 /*
   Live delayed stock quotes by Alpha Vantage
   Link: https://www.alphavantage.co/
@@ -61,4 +63,33 @@ $(document).ready(function(){
                       '</div>');
 
   }
+
+  window.mdc.autoInit();
+  const tabs = document.querySelector('.mdc-tab-bar').MDCTabBar;
+  $(".home").show();
+  $(".search").hide();
+
+  $(".homeTab").on("click", function(){
+    tabs.activateTab(0);
+    $(".home").show();
+    $(".search").hide();
+  });
+
+  $(".favTab").on("click", function(){
+    tabs.activateTab(1);
+    $(".home").show();
+    $(".search").hide();
+  });
+
+  $(".micTab").on("click", function(){
+    tabs.activateTab(2);
+    $(".home").show();
+    $(".search").hide();
+  });
+
+  $(".searchTab").on("click", function(){
+    tabs.activateTab(3);
+    $(".home").hide();
+    $(".search").show();
+  });
 });
