@@ -19,18 +19,25 @@ body {
   height: 60px;
 }
 
+.newsCards{
+  margin-top: 20px;
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
 .symbol{
   margin-top: 3px;
   margin-bottom: 0px;
   color: #757575;
 }
 
-.searchField{
+.searchField, .submitbutton{
+  margin-top:3px;
   width: 100%;
 }
 
 #date{
-  width:50%;
+  width:100%;
 }
 
 .companyName{

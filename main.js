@@ -44,13 +44,15 @@ var newsToDate = "&to="
 var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], "LYFT":["Lyft Inc."], "INTC":["Intel Corporation"],
                       "TWTR":["Twitter Inc."], "GOOGL":["Alphabet Inc."], "AMZN":["Amazon.com Inc."]};
 
-var stocks = ["SBUX", "AAPL", "Star"];
+var onedDayStocks = ["SBUX", "AAPL", "Star"];
+var stock = "";
 var rowData = [];
 var symbol = "";
 var color = '';
+var lastDate = "";
 
 $(document).ready(function(){
-  const keys = Object.keys(favoriteStocks);
+  var keys = Object.keys(favoriteStocks);
   for(const key of keys){
     console.log(key);
     $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
@@ -81,9 +83,30 @@ $(document).ready(function(){
   $(".stockInfo").hide();
   $("#time").hide();
   $("#date").hide();
+  $(".stockNews").hide();
+  $("#addTohome").hide();
 
   $(".homeTab").on("click", function(){
+    $('.home').empty();
+    var keys = Object.keys(favoriteStocks);
+    for(const key of keys){
+      console.log(key);
+      $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
+                          '<div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">' +
+                            '<div class="demo-card__primary">'+
+                              '<h2 class="demo-card__title mdc-typography mdc-typography--headline6 symbol">'+ key +'</h2>' +
+                              '<h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2 companyName">'+ favoriteStocks[key][0] +'</h3>' +
+                            '</div>' +
+                            '<span class="mdc-tab-indicator mdc-tab-indicator--active">' +
+                              '<span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>' +
+                            '</span>' +
+                            '<span class="mdc-tab__ripple"></span>' +
+                          '</div>' +
+                        '</div>');
+
+    }
     tabs.activateTab(0);
+    document.getElementById("dateForm").reset();
     $(".home").show();
     $(".fav").hide();
     $(".mic").hide();
@@ -92,12 +115,86 @@ $(document).ready(function(){
     $(".stockInfo").hide();
     $("#time").hide();
     $("#date").hide();
+    $(".stockNews").hide();
+    $("#addTohome").hide();
   });
 
-  $(".stockCard").on("click", function(){
-    //remove old stockCardInfo--->>
+  $("body").on("click", "div.stockCard", function(){
+    var stockSymbol = $(this).attr('id');
+    console.log(":"+stockSymbol+":");
+    clearStockInfo();
+    stockInfoOnClick(stockSymbol);
+  });
+
+  $(".submitbutton").on("click", function(e){
+    e.preventDefault();
+    //console.log(textField.value);
+    //console.log($("#text-field-hero-input").val());
+    var stockSymbol = document.getElementById("stockname").value;
+    console.log(stockSymbol);
+    clearStockInfo();
+    document.getElementById("queryForm").reset();
+    stockInfoOnClick(stockSymbol);
+  });
+
+  $(".favTab").on("click", function(){
+    tabs.activateTab(1);
+    $(".mic").hide();
+    $(".fav").show();
+    $(".home").hide();
+    $(".search").hide();
+    $("#chart_div").hide();
+    $(".stockInfo").hide();
+    $("#time").hide();
+    $("#date").hide();
+    $(".stockNews").hide();
+    $("#addTohome").hide();
+  });
+
+  $(".micTab").on("click", function(){
+    tabs.activateTab(2);
+    $(".home").hide();
+    $(".fav").hide();
+    $(".mic").show();
+    $(".search").hide();
+    $("#chart_div").hide();
+    $(".stockInfo").hide();
+    $("#time").hide();
+    $("#date").hide();
+    $(".stockNews").hide();
+    $("#addTohome").hide();
+  });
+
+  $(".searchTab").on("click", function(){
+    tabs.activateTab(3);
+    $("#chart_div").hide();
+    $(".home").hide();
+    $(".fav").hide();
+    $(".mic").hide();
+    $(".search").show();
+    $(".stockInfo").hide();
+    $("#time").hide();
+    $("#date").hide();
+    $(".stockNews").hide();
+    $("#addTohome").hide();
+  });
+
+  $("body").on("click", "button.addtohome", function(){
+    console.log("add to home click");
+    var stockinfo = $(this).attr('id');
+    console.log(stockinfo);
+    var stocka = stockinfo.split("_");
+    console.log(stocka[0] + " ..." + stocka[1]);
+    favoriteStocks[stocka[0]] = [stocka[1]];
+    console.log(favoriteStocks);
+  });
+
+  function clearStockInfo(){
+    console.log("stockinfo");
     $("#chart_div").empty();
     $(".stockInfo").empty();
+    $(".stockNews").empty();
+    $("#addTohome").empty();
     $("#time").empty();
     $(".mic").hide();
     $(".fav").hide();
@@ -107,28 +204,33 @@ $(document).ready(function(){
     $(".stockInfo").show();
     $("#time").show();
     $("#date").show();
+    $(".stockNews").show();
+    $("#addTohome").show();
+  }
 
-    var stockSymbol = $(this).attr('id');
-    console.log(":"+stockSymbol+":");
-    symbol = stockSymbol;
+  function stockInfoOnClick(stockSymbol){
+    console.log("stockInfo on click");
+    stock = stockSymbol;
     var intraDayUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
     console.log(intraDayUrl);
     var compInfo = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ stockSymbol +"&apikey=RQ5M4GP7TOJYKTI4";
-
+    var companyName = "";
 
     //$.get(intraDayUrl, function(response){});
     $.get(intraDayUrl, function(response){
       var startTime = "09:35:00";
-      var lastDate = response["Meta Data"]["3. Last Refreshed"].replace(/ /g," ");
+      lastDate = response["Meta Data"]["3. Last Refreshed"].replace(/ /g," ");
       var date = lastDate.split(" ")[0];
       var startDate = date + " " + startTime;
+
       $.get(compInfo, function(compname){
+        companyName = compname["bestMatches"][0]["2. name"];
         $(".stockInfo").append("<div> " +
-                                  "<h5 id='sym'>" + symbol + "</h5>" +
+                                  "<h5 id='sym'>" + stock.toUpperCase() + "</h5>" +
                                   "<h2 id='comp'>" + compname["bestMatches"][0]["2. name"] + "</h2>" +
                                   "<h2 id='quote'>$" + parseFloat(response["Time Series (5min)"][response["Meta Data"]["3. Last Refreshed"]]["4. close"]) + "</h2>" +
                                 "</div>");
-      })
+      });
       //console.log(startDate);
       //console.log(lastDate);
       var counter = 0;
@@ -153,77 +255,108 @@ $(document).ready(function(){
       //console.log(stockSymbol);
       google.charts.load('current', {packages: ['corechart', 'line']});
       google.charts.setOnLoadCallback(drawLogScales);
-      $("#time").append("<button class='mdc-button'>" +
-                          "<span class='mdc-button__ripple'></span>" +
-                        "1D</button>" +
-                        "<button class='mdc-button'>" +
-                          "<span class='mdc-button__ripple'></span>" +
-                        "1W</button>" +
-                        "<button class='mdc-button'>" +
-                          "<span class='mdc-button__ripple'></span>" +
-                        "1M</button>" +
-                        "<button class='mdc-button'>" +
-                          "<span class='mdc-button__ripple'></span>" +
-                        "3M</button>" +
-                        "<button class='mdc-button'>" +
-                          "<span class='mdc-button__ripple'></span>" +
-                        "1Y</button>" +
-                        "<button class='mdc-button'>" +
-                          "<span class='mdc-button__ripple'></span>" +
-                        "CT</button>" );
+      $("#time").append("<div class='oneDay'>Showing results for Date: " + date +" </div>");
     });
-  });
+    $.get(compInfo, function(compname){
+      $("#addTohome").append('<button type="Submit" class="btn btn-primary addtohome" id="'+ stock.toUpperCase()+ "_"+ compname["bestMatches"][0]["2. name"] +'">Add '+ stock.toUpperCase()+' to home</button>');
+    });
+    var allStockNews = "https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
+    $.get(allStockNews, function(newsResponse){
+      $.each(newsResponse["articles"], function(i,v){
+        $(".stockNews").append('<div class="mdc-card demo-card demo-basic-with-header newsCards"> '+
+                                '<div class="demo-card__primary">' +
+                                  '<h2 class="demo-card__title mdc-typography mdc-typography--headline6"><strong>'+ v["title"] +'</strong></h2>'+
+                                  '<h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2">by '+ v["author"] +'</h3>'+
+                                '</div>'+
+                                '<div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">' +
+                                  '<div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="background-image: url(&quot;'+ v["urlToImage"] +'&quot;);"></div>'+
+                                  '<div class="demo-card__secondary mdc-typography mdc-typography--body2">'+ v["description"] +'</div>'+
+                                '</div>'+
+                                '<div class="mdc-card__actions">'+
+                                  '<div class="mdc-card__action-buttons">'+
+                                  '<button class="mdc-button mdc-card__action mdc-card__action--button">  <span class="mdc-button__ripple"></span> Read</button> '+
+                                  '<button class="mdc-button mdc-card__action mdc-card__action--button">  <span class="mdc-button__ripple"></span> Bookmark</button>'+
+                                '</div>'+
+                                '<div class="mdc-card__action-icons">'+
+                                  '<button class="mdc-icon-button mdc-card__action mdc-card__action--icon--unbounded" aria-pressed="false" aria-label="Add to favorites" title="Add to favorites">' +
+                                    '<i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>' +
+                                    '<i class="material-icons mdc-icon-button__icon">favorite_border</i>'+
+                                  '</button>'+
+                                  '<button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="Share" data-mdc-ripple-is-unbounded="true">share</button>' +
+                                  '<button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="More options" data-mdc-ripple-is-unbounded="true">more_vert</button> ' +
+                                '</div>'+
+                              '</div>'+
+                            '</div>');
+      });
 
-  $(".favTab").on("click", function(){
-    tabs.activateTab(1);
-    $(".mic").hide();
-    $(".fav").show();
-    $(".home").hide();
-    $(".search").hide();
-    $("#chart_div").hide();
-    $(".stockInfo").hide();
-    $("#time").hide();
-    $("#date").hide();
-  });
+    });
 
-  $(".micTab").on("click", function(){
-    tabs.activateTab(2);
-    $(".home").hide();
-    $(".fav").hide();
-    $(".mic").show();
-    $(".search").hide();
-    $("#chart_div").hide();
-    $(".stockInfo").hide();
-    $("#time").hide();
-    $("#date").hide();
-  });
-
-  $(".searchTab").on("click", function(){
-    tabs.activateTab(3);
-
-    $("#chart_div").hide();
-    $(".home").hide();
-    $(".fav").hide();
-    $(".mic").hide();
-    $(".search").show();
-    $(".stockInfo").hide();
-    $("#time").hide();
-    $("#date").hide();
-
-  });
-
-
-  $(".submitbutton").click(function(e){
-    //console.log(textField.value);
-    //console.log($("#text-field-hero-input").val());
-    console.log(document.getElementById("stockname").value);
-  });
-
-
+    console.log("done");
+  }
 });
 
-//Used https://www.w3schools.com/howto/howto_js_autocomplete.asp for autocomplete feature
 
+
+function getStocks(symbol, url, startDate, endDate){
+  $.get(intraDayUrl, function(response){
+    var startTime = "09:35:00";
+    lastDate = response["Meta Data"]["3. Last Refreshed"].replace(/ /g," ");
+    var date = lastDate.split(" ")[0];
+    var startDate = date + " " + startTime;
+    $.get(compInfo, function(compname){
+      $(".stockInfo").append("<div> " +
+                                "<h5 id='sym'>" + onedDayStocks + "</h5>" +
+                                "<h2 id='comp'>" + compname["bestMatches"][0]["2. name"] + "</h2>" +
+                                "<h2 id='quote'>$" + parseFloat(response["Time Series (5min)"][response["Meta Data"]["3. Last Refreshed"]]["4. close"]) + "</h2>" +
+                              "</div>");
+    })
+    //console.log(startDate);
+    //console.log(lastDate);
+    var counter = 0;
+    $.each(response["Time Series (5min)"], function(i, v){
+        var rowEl = [];
+        rowEl.push(i);
+        //console.log(">>" + v["1. open"])
+        rowEl.push(parseFloat(v["1. open"]));
+        //console.log("<<" + rowEl);
+        rowData.push(rowEl);
+
+      if(i == startDate){
+        return false;
+      }
+
+      //console.log(v["1. open"]);
+    });
+    //console.log(rowData);
+    rowData = rowData.reverse();
+    console.log(rowData);
+    //$.each()
+    //console.log(stockSymbol);
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawLogScales);
+    $("#time").append("<button class='mdc-button'>" +
+                        "<span class='mdc-button__ripple'></span>" +
+                      "1D</button>" +
+                      "<button class='mdc-button'>" +
+                        "<span class='mdc-button__ripple'></span>" +
+                      "1W</button>" +
+                      "<button class='mdc-button'>" +
+                        "<span class='mdc-button__ripple'></span>" +
+                      "1M</button>" +
+                      "<button class='mdc-button'>" +
+                        "<span class='mdc-button__ripple'></span>" +
+                      "3M</button>" +
+                      "<button class='mdc-button'>" +
+                        "<span class='mdc-button__ripple'></span>" +
+                      "1Y</button>" +
+                      "<button class='mdc-button'>" +
+                        "<span class='mdc-button__ripple'></span>" +
+                      "CT</button>" );
+  });
+}
+
+
+//Used https://www.w3schools.com/howto/howto_js_autocomplete.asp for autocomplete feature
 function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
@@ -326,10 +459,10 @@ function autocomplete(inp, arr) {
 }
 
 
-autocomplete(document.getElementById("stockname"), stocks);
+autocomplete(document.getElementById("stockname"), onedDayStocks);
 //autocomplete(document.getElementById("searchbox"), stocks);
 
-if ('serviceWorker' in navigator) {
+/*if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js')
   .then(function(reg) {
     // registration worked
@@ -338,7 +471,7 @@ if ('serviceWorker' in navigator) {
     // registration failed
     console.log('Registration failed with ' + error);
   });
-}
+}*/
 
 function drawLogScales(){
   var data = new google.visualization.DataTable();

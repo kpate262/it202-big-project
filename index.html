@@ -15,12 +15,12 @@
       <style>
         :root {
           --mdc-theme-primary: #757575;
-          <!--mdc-theme-background: #000000;-->
+          --mdc-theme-background: #000000;
         }
       </style>
   </head>
 
-  <body class="mdc-theme--background">
+  <body>
     <!--Tabs-->
     <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
       <div class="mdc-tab-scroller">
@@ -84,61 +84,53 @@
     <div id="chart_div" style="width:400; height:600"></div>
     <div id="time"></div>
     <div id="date">
-      <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" data-mdc-auto-init="MDCTextField">
-        <i class="material-icons mdc-text-field__icon">event</i>
-        <input class="mdc-text-field__input" id="text-field-hero-input">
-        <div class="mdc-notched-outline">
-          <div class="mdc-notched-outline__leading"></div>
-          <div class="mdc-notched-outline__notch">
-            <label for="text-field-hero-input" class="mdc-floating-label">From</label>
+      <form id="dateForm">
+          <div class="row padding">
+              <div class="autocomplete" style="width: 100% !important;">
+                <input id="fromDate" name="searchform" type="text" class="form-control" placeholder="From Date(MM/DD/yyyy)" >
+              </div>
           </div>
-          <div class="mdc-notched-outline__trailing"></div>
-        </div>
-      </div>
-      <div class="mdc-text-field-helper-line">
-        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg" id="text-field-outlined-helper-text">(MM/DD/YYYY)</p>
-      </div>
-
-      <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" data-mdc-auto-init="MDCTextField">
-        <i class="material-icons mdc-text-field__icon">event</i>
-        <input class="mdc-text-field__input" id="text-field-hero-input">
-        <div class="mdc-notched-outline">
-          <div class="mdc-notched-outline__leading"></div>
-          <div class="mdc-notched-outline__notch">
-            <label for="text-field-hero-input" class="mdc-floating-label">To</label>
+          <div class="row padding">
+              <div class="autocomplete" style="width: 100% !important;">
+                <input id="toDate" name="searchform" type="text" class="form-control" placeholder="To Date(MM/DD/yyyy)" >
+              </div>
           </div>
-          <div class="mdc-notched-outline__trailing"></div>
-        </div>
-      </div>
-      <div class="mdc-text-field-helper-line">
-        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg" id="text-field-outlined-helper-text">(MM/DD/YYYY)</p>
-      </div>
+        <button type="Submit" class="btn btn-primary" id="submitDatebutton">Submit</button>
+      </form>
     </div>
+    <div class="addtohome" id="addTohome">
+
+    </diV>
+
+    <div class="stockNews"></div>
 
     <div class="home"></div>
 
 
     <div class="fav">
-      <div class="mdc-card demo-card">
+      <div class="mdc-card demo-card demo-basic-with-header">
+        <div class="demo-card__primary">
+          <h2 class="demo-card__title mdc-typography mdc-typography--headline6">Our Changing Planet</h2>
+          <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2">by Kurt Wagner</h3>
+        </div>
         <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-          <div class="demo-card__primary">
-            <h2 class="demo-card__title mdc-typography mdc-typography--headline6">Our Changing Planet</h2>
-            <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2">by Kurt Wagner</h3>
-          </div>
+          <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="background-image: url(&quot;https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg&quot;);"></div>
           <div class="demo-card__secondary mdc-typography mdc-typography--body2">Visit ten places on our planet that are undergoing the biggest changes today.</div>
         </div>
-        <!--div class="mdc-card__actions">
+        <div class="mdc-card__actions">
           <div class="mdc-card__action-buttons">
             <button class="mdc-button mdc-card__action mdc-card__action--button">  <span class="mdc-button__ripple"></span> Read</button>
+            <button class="mdc-button mdc-card__action mdc-card__action--button">  <span class="mdc-button__ripple"></span> Bookmark</button>
           </div>
           <div class="mdc-card__action-icons">
             <button class="mdc-icon-button mdc-card__action mdc-card__action--icon--unbounded" aria-pressed="false" aria-label="Add to favorites" title="Add to favorites">
               <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>
               <i class="material-icons mdc-icon-button__icon">favorite_border</i>
             </button>
-
+            <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="Share" data-mdc-ripple-is-unbounded="true">share</button>
+            <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="More options" data-mdc-ripple-is-unbounded="true">more_vert</button>
           </div>
-        </div-->
+        </div>
       </div>
     </div>
 
@@ -161,8 +153,8 @@
       <form autocomplete="off" id="queryForm">
         <div class="row padding">
             <div class="autocomplete" style="width: 100% !important;">
-              <input id="stockname" name="searchform" type="text" class="form-control" placeholder="Search Stocks or company" >
-              <button type="Submit" class="btn btn-primary submitbutton">Search</button>
+              <input id="stockname"  name="searchform" type="text" class="form-control"  placeholder="Search Stocks or company" >
+              <button type="Submit" class="btn btn-primary submitbutton" >Search</button>
             </div>
         </div>
 
@@ -178,8 +170,8 @@
           </div>
           <div class="mdc-notched-outline__trailing"></div>
         </div>
-      </div-->
-    </div>
+      </div>
+    </div-->
 
 
     <script src="./main.js" async defer></script>
