@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+      <link rel="manifest" href="./manifest.json">
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width">
       <title>SNEWS+</title>
@@ -78,9 +79,41 @@
         <div class="mdc-notched-outline__trailing"></div>
       </div>
     </div-->
+
     <div class="stockInfo"></div>
     <div id="chart_div" style="width:400; height:600"></div>
     <div id="time"></div>
+    <div id="date">
+      <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" data-mdc-auto-init="MDCTextField">
+        <i class="material-icons mdc-text-field__icon">event</i>
+        <input class="mdc-text-field__input" id="text-field-hero-input">
+        <div class="mdc-notched-outline">
+          <div class="mdc-notched-outline__leading"></div>
+          <div class="mdc-notched-outline__notch">
+            <label for="text-field-hero-input" class="mdc-floating-label">From</label>
+          </div>
+          <div class="mdc-notched-outline__trailing"></div>
+        </div>
+      </div>
+      <div class="mdc-text-field-helper-line">
+        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg" id="text-field-outlined-helper-text">(MM/DD/YYYY)</p>
+      </div>
+
+      <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" data-mdc-auto-init="MDCTextField">
+        <i class="material-icons mdc-text-field__icon">event</i>
+        <input class="mdc-text-field__input" id="text-field-hero-input">
+        <div class="mdc-notched-outline">
+          <div class="mdc-notched-outline__leading"></div>
+          <div class="mdc-notched-outline__notch">
+            <label for="text-field-hero-input" class="mdc-floating-label">To</label>
+          </div>
+          <div class="mdc-notched-outline__trailing"></div>
+        </div>
+      </div>
+      <div class="mdc-text-field-helper-line">
+        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg" id="text-field-outlined-helper-text">(MM/DD/YYYY)</p>
+      </div>
+    </div>
 
     <div class="home"></div>
 
@@ -111,44 +144,47 @@
 
 
     <div class="mic">
-      <div class="text-field-container ">
-        <div class="mdc-text-field text-field mdc-text-field--fullwidth">
-          <input type="text" id="text-field-outlined-shape-three" class="mdc-text-field__input" aria-describedby="text-field-outlined-shape-three-helper-text">
-          <div class="mdc-notched-outline mdc-notched-outline--upgraded ">
-            <div class="mdc-notched-outline__leading"></div>
-
-            <div class="mdc-notched-outline__notch" style="">
-              <label class="mdc-floating-label" for="text-field-outlined-shape-three" style="">Standard</label>
-            </div>
-            <div class="mdc-notched-outline__trailing">
-            </div>
+      <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon" data-mdc-auto-init="MDCTextField">
+        <i class="material-icons mdc-text-field__icon">mic</i>
+        <input class="mdc-text-field__input" id="text-field-hero-input">
+        <div class="mdc-notched-outline">
+          <div class="mdc-notched-outline__leading"></div>
+          <div class="mdc-notched-outline__notch">
+            <label for="text-field-hero-input" class="mdc-floating-label">Search Stock</label>
           </div>
+          <div class="mdc-notched-outline__trailing"></div>
         </div>
-
       </div>
     </div>
 
-    <div class="search">
-      <div class="text-field-container ">
-        <div class="mdc-text-field text-field mdc-text-field--fullwidth">
-          <input type="text" id="text-field-outlined-shape-three" class="mdc-text-field__input" aria-describedby="text-field-outlined-shape-three-helper-text">
-          <div class="mdc-notched-outline mdc-notched-outline--upgraded ">
-            <div class="mdc-notched-outline__leading"></div>
-
-            <div class="mdc-notched-outline__notch" style="">
-              <label class="mdc-floating-label" for="text-field-outlined-shape-three" style="">Standard</label>
+    <div class="search" autocomplete="off">
+      <form autocomplete="off" id="queryForm">
+        <div class="row padding">
+            <div class="autocomplete" style="width: 100% !important;">
+              <input id="stockname" name="searchform" type="text" class="form-control" placeholder="Search Stocks or company" >
+              <button type="Submit" class="btn btn-primary submitbutton">Search</button>
             </div>
-            <div class="mdc-notched-outline__trailing">
-            </div>
-          </div>
         </div>
 
-      </div>
+      </form>
+    </div>
+      <!--div class="mdc-text-field autocomplete mdc-text-field--outlined mdc-text-field--with-trailing-icon searchField" data-mdc-auto-init="MDCTextField">
+        <input class="mdc-text-field__input" id="text-field-hero-input searchbox" name="searchbox" type="text">
+        <button class="mdc-icon-button material-icons searchbutton">search</button>
+        <div class="mdc-notched-outline">
+          <div class="mdc-notched-outline__leading"></div>
+          <div class="mdc-notched-outline__notch">
+            <label for="text-field-hero-input" class="mdc-floating-label">Search Stock</label>
+          </div>
+          <div class="mdc-notched-outline__trailing"></div>
+        </div>
+      </div-->
     </div>
 
+
+    <script src="./main.js" async defer></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-    <script src="./main.js"></script>
   </body>
 
 </html>
