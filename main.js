@@ -556,7 +556,7 @@ function autocomplete(inp, arr) {
 autocomplete(document.getElementById("stockname"), onedDayStocks);
 //autocomplete(document.getElementById("searchbox"), stocks);
 
-/*if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js')
   .then(function(reg) {
     // registration worked
@@ -565,7 +565,7 @@ autocomplete(document.getElementById("stockname"), onedDayStocks);
     // registration failed
     console.log('Registration failed with ' + error);
   });
-}*/
+}
 
 function drawLogScales(){
   var data = new google.visualization.DataTable();
