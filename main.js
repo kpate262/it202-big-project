@@ -316,9 +316,9 @@ $(document).ready(function(){
   function stockInfoOnClick(stockSymbol){
     console.log("stockInfo on click");
     stock = stockSymbol;
-    var intraDayUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
+    var intraDayUrl = "https://cors-anywhere.herokuapp.com/https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
     console.log(intraDayUrl);
-    var compInfo = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ stockSymbol +"&apikey=RQ5M4GP7TOJYKTI4";
+    var compInfo = "https://cors-anywhere.herokuapp.com/https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ stockSymbol +"&apikey=RQ5M4GP7TOJYKTI4";
     var companyName = "";
 
     //$.get(intraDayUrl, function(response){});
@@ -365,7 +365,7 @@ $(document).ready(function(){
       $.get(compInfo, function(compname){
         $("#addTohome").append('<button type="Submit" class="btn btn-primary addtohome" id="'+ stock.toUpperCase()+ "_"+ compname["bestMatches"][0]["2. name"] +'">Add '+ stock.toUpperCase()+' to home</button>');
       });
-      var allStockNews = "https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
+      var allStockNews = "https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
       $.get(allStockNews, function(newsResponse){
         $.each(newsResponse["articles"], function(i,v){
           $(".stockNews").append('<div class="mdc-card demo-card demo-basic-with-header newsCards"> '+

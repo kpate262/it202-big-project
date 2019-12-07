@@ -1,7 +1,7 @@
 var cacheName = 'app-v1';
 var appShellFiles = [
  "./index.html",
- "./main.js"
+ "./main.js",
  "./style.css"
 ];
 
