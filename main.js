@@ -50,11 +50,11 @@ var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], 
 
 var favoriteNews = {};
 
-const db = new Dexie('Stock_News');
+//const db = new Dexie('Stock_News');
 
-db.version(1).stores({
-	favStocks: '++id, stock, company'
-});
+//db.version(1).stores({
+//	favStocks: '++id, stock, company'
+//});
 
 var onedDayStocks = ["SBUX", "AAPL", "Star"];
 var stock = "";
@@ -67,10 +67,10 @@ $(document).ready(function(){
   var keys = Object.keys(favoriteStocks);
   for(const key of keys){
     console.log(key);
-    db.favStocks.add({
-		stock: key,
-		company: favoriteStocks[key][0]
-	  });
+    //db.favStocks.add({
+		//stock: key,
+		//company: favoriteStocks[key][0]
+	  //});
     $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
                         '<div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">' +
                           '<div class="demo-card__primary">'+
@@ -316,9 +316,9 @@ $(document).ready(function(){
   function stockInfoOnClick(stockSymbol){
     console.log("stockInfo on click");
     stock = stockSymbol;
-    var intraDayUrl = "https://cors-anywhere.herokuapp.com/https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
+    var intraDayUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ stockSymbol +"&interval=5min&outputsize=full&apikey=RQ5M4GP7TOJYKTI4";
     console.log(intraDayUrl);
-    var compInfo = "https://cors-anywhere.herokuapp.com/https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ stockSymbol +"&apikey=RQ5M4GP7TOJYKTI4";
+    var compInfo = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ stockSymbol +"&apikey=RQ5M4GP7TOJYKTI4";
     var companyName = "";
 
     //$.get(intraDayUrl, function(response){});
@@ -362,10 +362,10 @@ $(document).ready(function(){
       google.charts.setOnLoadCallback(drawLogScales);
       $("#time").append("<div class='oneDay'>Showing results for Date: " + date +" </div>");
 
-      $.get(compInfo, function(compname){
+      $.get(compInfo, window.load = function(compname){
         $("#addTohome").append('<button type="Submit" class="btn btn-primary addtohome" id="'+ stock.toUpperCase()+ "_"+ compname["bestMatches"][0]["2. name"] +'">Add '+ stock.toUpperCase()+' to home</button>');
       });
-      var allStockNews = "https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
+      var allStockNews = "https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
       $.get(allStockNews, function(newsResponse){
         $.each(newsResponse["articles"], function(i,v){
           $(".stockNews").append('<div class="mdc-card demo-card demo-basic-with-header newsCards"> '+
@@ -568,7 +568,7 @@ function autocomplete(inp, arr) {
 autocomplete(document.getElementById("stockname"), onedDayStocks);
 //autocomplete(document.getElementById("searchbox"), stocks);
 
-if ('serviceWorker' in navigator) {
+/*if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js')
   .then(function(reg) {
     // registration worked
@@ -577,7 +577,7 @@ if ('serviceWorker' in navigator) {
     // registration failed
     console.log('Registration failed with ' + error);
   });
-}
+}*/
 
 function drawLogScales(){
   var data = new google.visualization.DataTable();
