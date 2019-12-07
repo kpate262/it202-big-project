@@ -1,32 +1,28 @@
-self.addEventListener('activate', function(event) {
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          // Return true if you want to remove this cache,
-          // but remember that caches are shared across
-          // the whole origin
-        }).map(function(cacheName) {
-          return caches.delete(cacheName);
-        })
-      );
-    })
-  );
+var cacheName = 'app-v1';
+var appShellFiles = [
+ "./index.html",
+ "./loading.gif"
+];
+
+
+
+self.addEventListener('install', function(e) {
+  console.log('[Service Worker] Install');
 });
 
 
+self.addEventListener('fetch', function(e) {
+  e.respondWith(
+    caches.match(e.request).then(function(r) {
+      console.log('[Service Worker] Fetching resource: '+ e.request.url);
 
-
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open('mysite-static-v3').then(function(cache) {
-      return cache.addAll([
-        '/css/whatever-v3.css',
-        '/css/imgs/sprites-v6.png',
-        '/css/fonts/whatever-v8.woff',
-        '/js/all-min-v4.js'
-        // etc
-      ]);
+      return r || fetch(e.request).then(function(response) {
+          return caches.open(cacheName).then(function(cache) {
+            console.log('[Service Worker] Caching new resource: '+e.request.url);
+            cache.put(e.request, response.clone());
+            return response;
+        });
+      });
     })
   );
 });
