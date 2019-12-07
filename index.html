@@ -35,16 +35,6 @@
               </span>
               <span class="mdc-tab__ripple"></span>
             </button>
-            <button class="mdc-tab favTab" role="tab" aria-selected="true" tabindex="1">
-              <span class="mdc-tab__content">
-                <span class="mdc-tab__icon material-icons" aria-hidden="true">favorite</span>
-                <span class="mdc-tab__text-label" style="display: none;">Favorites</span>
-              </span>
-              <span class="mdc-tab-indicator mdc-tab-indicator--active">
-                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-              </span>
-              <span class="mdc-tab__ripple"></span>
-            </button>
             <button class="mdc-tab micTab" role="tab" aria-selected="false" tabindex="2">
               <span class="mdc-tab__content">
                 <span class="mdc-tab__icon material-icons" aria-hidden="true">mic</span>
@@ -83,7 +73,7 @@
     <div class="stockInfo"></div>
     <div id="chart_div" style="width:400; height:600"></div>
     <div id="time"></div>
-    <div id="date">
+    <!--div id="date">
       <form id="dateForm">
           <div class="row padding">
               <div class="autocomplete" style="width: 100% !important;">
@@ -97,8 +87,8 @@
           </div>
         <button type="Submit" class="btn btn-primary" id="submitDatebutton">Submit</button>
       </form>
-    </div>
-    <div class="addtohome" id="addTohome">
+    </div-->
+    <div class="addTohome" id="addTohome">
 
     </diV>
 
@@ -136,17 +126,15 @@
 
 
     <div class="mic">
-      <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon" data-mdc-auto-init="MDCTextField">
-        <i class="material-icons mdc-text-field__icon">mic</i>
-        <input class="mdc-text-field__input" id="text-field-hero-input">
-        <div class="mdc-notched-outline">
-          <div class="mdc-notched-outline__leading"></div>
-          <div class="mdc-notched-outline__notch">
-            <label for="text-field-hero-input" class="mdc-floating-label">Search Stock</label>
-          </div>
-          <div class="mdc-notched-outline__trailing"></div>
+      <form id="micForm">
+        <div class="row padding">
+            <div style="width: 100% !important;">
+              <input id="stockmicname"  name="searchform" type="text" class="form-control"  placeholder="Speek to type (ex: 'G','O','O','G')" >
+              <button type="Submit" class="btn btn-primary micbutton" >Search</button>
+            </div>
         </div>
-      </div>
+
+      </form>
     </div>
 
     <div class="search" autocomplete="off">

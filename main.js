@@ -41,8 +41,14 @@ var newsToDate = "&to="
                   https://newsapi.org/v2/everything?q=bitcoin&apiKey=4db8c37440f448848c0ee203d91c5c42
 */
 
+var SpeechRecognition = window.webkitSpeechRecognition;
+var recognition = new SpeechRecognition();
+
+
 var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], "LYFT":["Lyft Inc."], "INTC":["Intel Corporation"],
                       "TWTR":["Twitter Inc."], "GOOGL":["Alphabet Inc."], "AMZN":["Amazon.com Inc."]};
+
+var favoriteNews = {};
 
 var onedDayStocks = ["SBUX", "AAPL", "Star"];
 var stock = "";
@@ -73,7 +79,7 @@ $(document).ready(function(){
   window.mdc.autoInit();
   //mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
   const tabs = document.querySelector('.mdc-tab-bar').MDCTabBar;
-  const textField = document.querySelector('.mdc-text-field').MDCTextField;
+  //const textField = document.querySelector('.mdc-text-field').MDCTextField;
 
   $(".home").show();
   $(".fav").hide();
@@ -106,7 +112,7 @@ $(document).ready(function(){
 
     }
     tabs.activateTab(0);
-    document.getElementById("dateForm").reset();
+    //document.getElementById("dateForm").reset();
     $(".home").show();
     $(".fav").hide();
     $(".mic").hide();
@@ -137,6 +143,18 @@ $(document).ready(function(){
     stockInfoOnClick(stockSymbol);
   });
 
+  $(".micbutton").on("click", function(e){
+    e.preventDefault();
+    recognition.stop();
+    //console.log(textField.value);
+    //console.log($("#text-field-hero-input").val());
+    console.log(Content);
+    clearStockInfo();
+    document.getElementById("micForm").reset();
+    stockInfoOnClick(Content);
+    Content = '';
+  });
+
   $(".favTab").on("click", function(){
     tabs.activateTab(1);
     $(".mic").hide();
@@ -151,8 +169,42 @@ $(document).ready(function(){
     $("#addTohome").hide();
   });
 
+
+  var Textbox = $('#stockmicname');
+  var Content = '';
+  var instructions = $('instructions');
+  recognition.continuous = true;
+  recognition.onresult = function(event) {
+
+  var current = event.resultIndex;
+
+  var transcript = event.results[current][0].transcript;
+
+    Content += transcript;
+    Textbox.val(Content);
+
+  };
+
+  recognition.onstart = function() {
+    instructions.text('Voice recognition is ON.');
+  }
+
+  recognition.onspeechend = function() {
+    instructions.text('No activity.');
+  }
+
+  recognition.onerror = function(event) {
+    if(event.error == 'no-speech') {
+      instructions.text('Try again.');
+    }
+  }
+  Textbox.on('input', function() {
+    Content = $(this).val();
+  })
+
+
   $(".micTab").on("click", function(){
-    tabs.activateTab(2);
+    tabs.activateTab(1);
     $(".home").hide();
     $(".fav").hide();
     $(".mic").show();
@@ -163,10 +215,14 @@ $(document).ready(function(){
     $("#date").hide();
     $(".stockNews").hide();
     $("#addTohome").hide();
+    if (Content.length) {
+      Content += ' ';
+    }
+    recognition.start();
   });
 
   $(".searchTab").on("click", function(){
-    tabs.activateTab(3);
+    tabs.activateTab(2);
     $("#chart_div").hide();
     $(".home").hide();
     $(".fav").hide();
@@ -177,6 +233,25 @@ $(document).ready(function(){
     $("#date").hide();
     $(".stockNews").hide();
     $("#addTohome").hide();
+  });
+
+  $("body").on("click", ".readButton", function(){
+    var newsinfo = $(this).attr('id');
+    console.log(newsinfo);
+    var feva = newsinfo.split("_", 2);
+    console.log(feva[0] + " ..." + feva[1]);
+    favoriteNews[feva[0]] = [feva[1]];
+    console.log(favoriteNews);
+  });
+
+  $("body").on("click", ".favNewsButton", function(){
+    hide();
+    var newsinfo = $(this).attr('id');
+    console.log(newsinfo);
+    var feva = newsinfo.split("_");
+    console.log(feva[0] + " ..." + feva[1]);
+    favoriteNews[feva[0]] = [feva[1]];
+    console.log(favoriteNews);
   });
 
   $("body").on("click", "button.addtohome", function(){
@@ -206,6 +281,24 @@ $(document).ready(function(){
     $("#date").show();
     $(".stockNews").show();
     $("#addTohome").show();
+  }
+
+  function hide(){
+    $("#chart_div").empty();
+    $(".stockInfo").empty();
+    $(".stockNews").empty();
+    $("#addTohome").empty();
+    $("#time").empty();
+    $(".mic").hide();
+    $(".fav").hide();
+    $(".home").hide();
+    $(".search").hide();
+    $("#chart_div").hide();
+    $(".stockInfo").hide();
+    $("#time").hide();
+    $("#date").hide();
+    $(".stockNews").hide();
+    $("#addTohome").hide();
   }
 
   function stockInfoOnClick(stockSymbol){
@@ -256,40 +349,41 @@ $(document).ready(function(){
       google.charts.load('current', {packages: ['corechart', 'line']});
       google.charts.setOnLoadCallback(drawLogScales);
       $("#time").append("<div class='oneDay'>Showing results for Date: " + date +" </div>");
-    });
-    $.get(compInfo, function(compname){
-      $("#addTohome").append('<button type="Submit" class="btn btn-primary addtohome" id="'+ stock.toUpperCase()+ "_"+ compname["bestMatches"][0]["2. name"] +'">Add '+ stock.toUpperCase()+' to home</button>');
-    });
-    var allStockNews = "https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
-    $.get(allStockNews, function(newsResponse){
-      $.each(newsResponse["articles"], function(i,v){
-        $(".stockNews").append('<div class="mdc-card demo-card demo-basic-with-header newsCards"> '+
-                                '<div class="demo-card__primary">' +
-                                  '<h2 class="demo-card__title mdc-typography mdc-typography--headline6"><strong>'+ v["title"] +'</strong></h2>'+
-                                  '<h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2">by '+ v["author"] +'</h3>'+
-                                '</div>'+
-                                '<div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">' +
-                                  '<div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="background-image: url(&quot;'+ v["urlToImage"] +'&quot;);"></div>'+
-                                  '<div class="demo-card__secondary mdc-typography mdc-typography--body2">'+ v["description"] +'</div>'+
-                                '</div>'+
-                                '<div class="mdc-card__actions">'+
-                                  '<div class="mdc-card__action-buttons">'+
-                                  '<button class="mdc-button mdc-card__action mdc-card__action--button">  <span class="mdc-button__ripple"></span> Read</button> '+
-                                  '<button class="mdc-button mdc-card__action mdc-card__action--button">  <span class="mdc-button__ripple"></span> Bookmark</button>'+
-                                '</div>'+
-                                '<div class="mdc-card__action-icons">'+
-                                  '<button class="mdc-icon-button mdc-card__action mdc-card__action--icon--unbounded" aria-pressed="false" aria-label="Add to favorites" title="Add to favorites">' +
-                                    '<i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>' +
-                                    '<i class="material-icons mdc-icon-button__icon">favorite_border</i>'+
-                                  '</button>'+
-                                  '<button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="Share" data-mdc-ripple-is-unbounded="true">share</button>' +
-                                  '<button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="More options" data-mdc-ripple-is-unbounded="true">more_vert</button> ' +
-                                '</div>'+
-                              '</div>'+
-                            '</div>');
-      });
 
+      $.get(compInfo, function(compname){
+        $("#addTohome").append('<button type="Submit" class="btn btn-primary addtohome" id="'+ stock.toUpperCase()+ "_"+ compname["bestMatches"][0]["2. name"] +'">Add '+ stock.toUpperCase()+' to home</button>');
+      });
+      var allStockNews = "https://newsapi.org/v2/everything?q="+ stock +"&from="+ date +"&sortBy=popularity&apiKey=4db8c37440f448848c0ee203d91c5c42";
+      $.get(allStockNews, function(newsResponse){
+        $.each(newsResponse["articles"], function(i,v){
+          $(".stockNews").append('<div class="mdc-card demo-card demo-basic-with-header newsCards"> '+
+                                  '<div class="demo-card__primary">' +
+                                    '<h2 class="demo-card__title mdc-typography mdc-typography--headline6"><strong>'+ v["title"] +'</strong></h2>'+
+                                    '<h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2">by '+ v["author"] +'</h3>'+
+                                  '</div>'+
+                                  '<div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">' +
+                                    '<div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="background-image: url(&quot;'+ v["urlToImage"] +'&quot;);"></div>'+
+                                    '<div class="demo-card__secondary mdc-typography mdc-typography--body2">'+ v["description"] +'</div>'+
+                                  '</div>'+
+                                  '<div class="mdc-card__actions">'+
+                                    '<div class="mdc-card__action-buttons">'+
+                                    '<button class="mdc-button mdc-card__action mdc-card__action--button readButton" id="'+ v["title"]+ "_" + v["url"] +'">  <span class="mdc-button__ripple"></span> Read</button> '+
+                                    '<button class="mdc-button mdc-card__action mdc-card__action--button favNewsButton" id="'+ v["title"]+ "_" + v["url"] +'">  <span class="mdc-button__ripple"></span> Favorite</button>'+
+                                  '</div>'+
+                                  '<div class="mdc-card__action-icons">'+
+                                    '<button class="mdc-icon-button mdc-card__action mdc-card__action--icon--unbounded" aria-pressed="false" aria-label="Add to favorites" title="Add to favorites">' +
+                                      '<i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>' +
+                                      '<i class="material-icons mdc-icon-button__icon">favorite_border</i>'+
+                                    '</button>'+
+
+                                  '</div>'+
+                                '</div>'+
+                              '</div>');
+        });
+
+      });
     });
+
 
     console.log("done");
   }

@@ -31,7 +31,7 @@ body {
   color: #757575;
 }
 
-.searchField, .submitbutton{
+.searchField, .submitbutton, .micbutton{
   margin-top:3px;
   width: 100%;
 }
