@@ -50,6 +50,12 @@ var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], 
 
 var favoriteNews = {};
 
+const db = new Dexie('Stock_News');
+
+db.version(1).stores({
+	favStocks: '++id, stock, company'
+});
+
 var onedDayStocks = ["SBUX", "AAPL", "Star"];
 var stock = "";
 var rowData = [];
@@ -61,6 +67,10 @@ $(document).ready(function(){
   var keys = Object.keys(favoriteStocks);
   for(const key of keys){
     console.log(key);
+    db.favStocks.add({
+		stock: key,
+		company: favoriteStocks[key][0]
+	  });
     $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
                         '<div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">' +
                           '<div class="demo-card__primary">'+
@@ -94,9 +104,11 @@ $(document).ready(function(){
 
   $(".homeTab").on("click", function(){
     $('.home').empty();
+    //console.log("kk"+ db.favStocks.where('SBUX').toArray()[0]);
     var keys = Object.keys(favoriteStocks);
     for(const key of keys){
       console.log(key);
+
       $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
                           '<div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">' +
                             '<div class="demo-card__primary">'+
