@@ -124,7 +124,7 @@ $(document).ready(function(){
                         '</div>');
 
     }
-    tabs.activateTab(0);
+    tabs.activateTab(0); 
     //document.getElementById("dateForm").reset();
     $(".home").show();
     $(".fav").hide();
