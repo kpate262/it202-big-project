@@ -50,11 +50,11 @@ var favoriteStocks = {"SBUX":["Starbucks Corporation"], "AAPL": ["Apple Inc."], 
 
 var favoriteNews = {};
 
-//const db = new Dexie('Stock_News');
+const db = new Dexie('Stock_News');
 
-//db.version(1).stores({
-//	favStocks: '++id, stock, company'
-//});
+db.version(1).stores({
+	favStocks: '++id, stock, company'
+});
 
 var onedDayStocks = ["SBUX", "AAPL", "Star"];
 var stock = "";
@@ -65,12 +65,13 @@ var lastDate = "";
 
 $(document).ready(function(){
   var keys = Object.keys(favoriteStocks);
+  //console.log( db.favStocks.where('stock').equals("AAPL").first());
   for(const key of keys){
     console.log(key);
-    //db.favStocks.add({
-		//stock: key,
-		//company: favoriteStocks[key][0]
-	  //});
+    db.favStocks.add({
+		  stock: key,
+		  company: favoriteStocks[key][0]
+	  });
     $(".home").append('<div class="mdc-card demo-card demo-ui-control stockCard" id="'+ key +'">' +
                         '<div class="mdc-card__primary-action demo-card__primary-action favCard" tabindex="0">' +
                           '<div class="demo-card__primary">'+
@@ -104,7 +105,7 @@ $(document).ready(function(){
 
   $(".homeTab").on("click", function(){
     $('.home').empty();
-    //console.log("kk"+ db.favStocks.where('SBUX').toArray()[0]);
+    //console.log("kk"+ db.favStocks.where('stock').equals('SBUX'));
     var keys = Object.keys(favoriteStocks);
     for(const key of keys){
       console.log(key);
@@ -568,7 +569,7 @@ function autocomplete(inp, arr) {
 autocomplete(document.getElementById("stockname"), onedDayStocks);
 //autocomplete(document.getElementById("searchbox"), stocks);
 
-/*if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js')
   .then(function(reg) {
     // registration worked
@@ -577,7 +578,7 @@ autocomplete(document.getElementById("stockname"), onedDayStocks);
     // registration failed
     console.log('Registration failed with ' + error);
   });
-}*/
+}
 
 function drawLogScales(){
   var data = new google.visualization.DataTable();
