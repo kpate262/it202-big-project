@@ -2,6 +2,8 @@
 
 ### **Disclaimer:** alphavantage.co api limits calls per minutes.  So after few clicks you might have to wait to access stock info or search new stocks.
 
+## Functionalities
+
 - Home Screen tab shows all the stocks saved. All the stock cards are clickable.
 
 - Mic tab on click listens for stock name and shows all the news for that stock on the last trading day.
